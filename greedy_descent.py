@@ -123,9 +123,11 @@ def main() -> None:
 
     res = greedy_descent(crater_map, start_rc, max_step_m=max_step, scale_m_per_px=scale)
 
-    print("=== Required start ===")
+    end_xy = rc_to_xy(res.end_rc[0], res.end_rc[1], nr=nr, scale=scale)
+
+    print("=== Given coordinates ===")
     print(f"start_xy={start_xy} -> start_rc={res.start_rc}, height={res.start_height:.3f}")
-    print(f"end_rc={res.end_rc}, height={res.end_height:.3f}")
+    print(f"end_xy={end_xy} -> end_rc={res.end_rc}, height={res.end_height:.3f}")
     print(f"steps={res.steps}, distance_m={res.distance_m:.2f}")
     print(f"stopped_reason={res.stopped_reason}")
 
@@ -138,14 +140,15 @@ def main() -> None:
         (3200.0, 5200.0),
     ]
 
-    print("\n=== Additional starts ===")
+    print("\n=== Additional coordinates ===")
     for xy in tests_xy:
         rc = xy_to_rc(*xy, nr=nr, scale=scale)
-        r = greedy_descent(crater_map, rc, max_step_m=max_step, scale_m_per_px=scale)
+        r, c = rc
+        start_h = float(crater_map[r, c])
+        run = greedy_descent(crater_map, rc, max_step_m=max_step, scale_m_per_px=scale)
         print(
-            f"start_xy={xy} -> end_height={r.end_height:.3f}, "
-            f"drop={r.start_height - r.end_height:.3f}, "
-            f"dist_m={r.distance_m:.1f}, steps={r.steps}, reason={r.stopped_reason}"
+            f"start_xy={xy} -> start_rc={rc}, start_height={start_h:.3f}, "
+            f"end_height={run.end_height:.3f}, dist_m={run.distance_m:.1f}, steps={run.steps}"
         )
 
 
