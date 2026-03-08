@@ -126,9 +126,9 @@ def main() -> None:
     end_xy = rc_to_xy(res.end_rc[0], res.end_rc[1], nr=nr, scale=scale)
 
     print("=== Given coordinates ===")
-    print(f"start_xy={start_xy} -> start_rc={res.start_rc}, height={res.start_height:.3f}")
-    print(f"end_xy={end_xy} -> end_rc={res.end_rc}, height={res.end_height:.3f}")
-    print(f"steps={res.steps}, distance_m={res.distance_m:.2f}")
+    print(f"start_xy={start_xy} -> start_rc={res.start_rc}, start_height={res.start_height:.3f}")
+    print(f"end_xy={end_xy} -> end_rc={res.end_rc}, end_height={res.end_height:.3f}")
+    print(f"change_in_height={res.end_height - res.start_height}, steps={res.steps}, distance_m={res.distance_m:.2f}")
     print(f"stopped_reason={res.stopped_reason}")
 
 
@@ -144,12 +144,11 @@ def main() -> None:
     for xy in tests_xy:
         rc = xy_to_rc(*xy, nr=nr, scale=scale)
         r, c = rc
-        start_h = float(crater_map[r, c])
+        start_height = float(crater_map[r, c])
         run = greedy_descent(crater_map, rc, max_step_m=max_step, scale_m_per_px=scale)
-        print(
-            f"start_xy={xy} -> start_rc={rc}, start_height={start_h:.3f}, "
-            f"end_height={run.end_height:.3f}, dist_m={run.distance_m:.1f}, steps={run.steps}"
-        )
+        print(f"start_xy={xy} -> start_rc={rc}, start_height={start_height:.3f}, ")
+        print(f"end_height={run.end_height:.3f}, change_in_height={run.end_height - start_height}, dist_m={run.distance_m:.1f}, steps={run.steps}")
+        print()
 
 
 if __name__ == "__main__":
